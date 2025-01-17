@@ -93,7 +93,8 @@ const App = () => {
     if (confirm(`Delete ${person.name}?`)) {
       phoneService.deleteItem(id)
         .then((res) => {
-          setPersons(persons.filter(p => p.id !== res.id))
+          console.log(res)
+          setPersons(persons.filter(p => p.id !== person.id))
           setInfoMessage(`the person ${person.name} was successfully deleted from the server`)
           setTimeout(() => {
             setInfoMessage(null)
@@ -106,7 +107,6 @@ const App = () => {
             setErrorMessage(null)
           }, 5000)
         })
-      setPersons(persons.filter(p => p.id !== id))
     }
   }
 
