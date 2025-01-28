@@ -21,8 +21,8 @@ app.get('/api/persons', (request, response) => {
 })
 
 app.get('/info', (request, response) => {
-    const currentDate = new Date(); 
-    const formattedDate = currentDate.toString(); 
+    const currentDate = new Date();
+    const formattedDate = currentDate.toString();
     const count = Person.countDocuments().then(count => {
         response.send(`
             <p>The phonebook has info for ${count} people</p>
@@ -36,7 +36,7 @@ app.get('/api/persons/:id', (request, response) => {
     Person.findById(id).then(person => {
         response.json(person)
     })
-    .catch(error => next(error))
+        .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
@@ -44,7 +44,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
     Person.findByIdAndDelete(id).then(person => {
         response.status(204).end()
     })
-    .catch(error => next(error))
+        .catch(error => next(error))
 })
 
 // add new person
@@ -57,7 +57,7 @@ app.post('/api/persons', (request, response, next) => {
         });
     }
 
-    Person.findOne({name: body.name}).then(existingPerson => {
+    Person.findOne({ name: body.name }).then(existingPerson => {
         if (existingPerson) {
             return response.status(400).json({
                 error: "Name must be unique"
@@ -72,11 +72,25 @@ app.post('/api/persons', (request, response, next) => {
         return person.save()
 
     })
-    .then(savedPerson => response.json(savedPerson))
-    .catch(error => next(error))
+        .then(savedPerson => response.json(savedPerson))
+        .catch(error => next(error))
 
 })
 
+app.put('/api/persons/:id', (request, response, next) => {
+    const body = request.body
+
+    const person = {
+        name: body.name,
+        number: body.number,
+    }
+
+    Person.findByIdAndUpdate(request.params.id, person, { new: true })
+        .then(updatedPerson => {
+            response.json(updatedPerson)
+        })
+        .catch(error => next(error))
+})
 
 const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })
@@ -91,6 +105,8 @@ const errorHandler = (error, request, response, next) => {
     }
     next(error)
 }
+
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
