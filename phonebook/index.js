@@ -20,6 +20,7 @@ app.get('/api/persons', (request, response) => {
     })
 })
 
+// count person number using query
 app.get('/info', (request, response) => {
     const currentDate = new Date();
     const formattedDate = currentDate.toString();
