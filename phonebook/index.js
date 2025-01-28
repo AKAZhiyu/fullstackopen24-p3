@@ -41,12 +41,9 @@ app.get('/api/persons/:id', (request, response) => {
 app.delete('/api/persons/:id', (request, response) => {
     const id = request.params.id
     Person.findByIdAndDelete(id).then(person => {
-        if (person) {
-            response.status(204).end()
-        } else {
-            response.status(404).json({ error: "Person not found" })
-        }
+        response.status(204).end()
     })
+    .catch(error => next(error))
 })
 
 // add new person
