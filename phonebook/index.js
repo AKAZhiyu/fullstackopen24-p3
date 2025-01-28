@@ -49,7 +49,7 @@ app.delete('/api/persons/:id', (request, response) => {
     })
 })
 
-
+// add new person
 app.post('/api/persons', (request, response) => {
     const body = request.body
 
