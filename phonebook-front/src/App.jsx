@@ -52,6 +52,21 @@ const App = () => {
             setInfoMessage(null)
           }, 5000)
         })
+        .catch(error => {
+          if (error.response && error.response.data.error) {
+            const errorMessage = error.response.data.error;
+            if (errorMessage.includes('is shorter than the minimum allowed length')) {
+              setErrorMessage('Name must be at least 5 characters long.');
+            } else {
+              setErrorMessage(errorMessage);
+            }
+          } else {
+            setErrorMessage('An unexpected error occurred.');
+          }
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 5000);
+        });
     } else {
       if (confirm(`${newName} is already added to phonebook, replace the old one with a new one?`)) {
         const person = persons.find(p => p.name === newName)
@@ -73,11 +88,21 @@ const App = () => {
             }, 5000)
           })
           .catch(error => {
-            setErrorMessage(`the person ${newName} has already been removed from the server`)
+            if (error.response && error.response.data.error) {
+              const errorMessage = error.response.data.error;
+              if (errorMessage.includes('is shorter than the minimum allowed length')) {
+                setErrorMessage('Name must be at least 5 characters long.');
+              } else {
+                setErrorMessage(errorMessage);
+              }
+            } else {
+              setErrorMessage(`The person ${newName} has already been removed from the server`);
+              setPersons(persons.filter((person) => person.name !== newName));
+            }
             setTimeout(() => {
-              setErrorMessage(null)
-            }, 5000)
-            setPersons(persons.filter(person => person.name !== newName))
+              setErrorMessage(null);
+            }, 5000);
+
           })
       }
     }
