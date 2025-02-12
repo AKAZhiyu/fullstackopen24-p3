@@ -7,7 +7,7 @@ const url = process.env.MONGODB_URI
 console.log('connecting to', url)
 
 mongoose.connect(url)
-  .then(result => {
+  .then(() => {
     console.log('connected to MongoDB')
   })
   .catch(error => {
@@ -22,7 +22,7 @@ const personSchema = new mongoose.Schema({
   },
   number: {
     type: String,
-    minLength: [8, "Number should have a length of 8 or more"],
+    minLength: [8, 'Number should have a length of 8 or more'],
     validate: {
       validator: (number) => {
         return /^(?=.{8,}$)\d{2,3}-\d+$/.test(number)
